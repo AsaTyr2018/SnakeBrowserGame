@@ -12,7 +12,8 @@ const tileCount = 20;
 const tileSize = canvas.width / tileCount;
 
 let snake = [{ x: 10, y: 10 }];
-let velocity = { x: 0, y: 0 };
+// Default velocity so the snake moves right when a new game starts
+let velocity = { x: 1, y: 0 };
 let apple = { x: 5, y: 5 };
 let growing = 0;
 let score = 0;
@@ -58,8 +59,14 @@ function draw() {
 function update() {
     const head = { x: snake[0].x + velocity.x, y: snake[0].y + velocity.y };
 
+    // Only treat moving onto the snake body as a collision if the snake has
+    // actually moved before (length > 1). This prevents an immediate game over
+    // when the velocity is {x: 0, y: 0}.
+    const hitSelf = snake.length > 1 &&
+        snake.some(segment => segment.x === head.x && segment.y === head.y);
+
     if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount ||
-        snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+        hitSelf) {
         running = false;
         finalScoreDisplay.textContent = `Score: ${score}`;
         gameOverScreen.classList.remove('hidden');
