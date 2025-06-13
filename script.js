@@ -20,7 +20,8 @@ let running = false;
 
 function resetGame() {
     snake = [{ x: 10, y: 10 }];
-    velocity = { x: 0, y: 0 };
+    // Start with a small movement to avoid immediate self-collision
+    velocity = { x: 1, y: 0 };
     apple = randomApple();
     growing = 0;
     score = 0;
